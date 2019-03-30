@@ -1,0 +1,14 @@
+{
+  "name": "react-component-cli",
+  "version": "1.0.0",
+  "description": "A CLI for creating new react components",
+  "main": "cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabriele Venturi",
+  "license": "MIT",
+  "bin": {
+    "create-react-component": "./cli/cli.js"
+  }
+}
