@@ -6,7 +6,9 @@
  */
 
 const fs = require("fs");
-const program = require('commander');
+const program = require("commander");
+
+const DEFAULT_PATH = "src/components";
 
 const HELP_MSG = `
 NAME
@@ -20,7 +22,7 @@ SYNOPSIS
     create-react-component-cli <command> [name] [options]
 
 AVAILABLE COMMAND:
-    add     creates a new component using the provided name. default path: 'src/components'
+    add     creates a new component using the provided name. default path: '${DEFAULT_PATH}'
 
 OPTIONS
     -path   override default path.
@@ -32,8 +34,8 @@ COPYRIGHT
 SEE ALSO
     GitHub repository & Issue Tracker: https://github.com/gventuri/create-react-component
     Npmjs: https://www.npmjs.com/package/create-react-component-cli
-    Website: 
-    Documentation: 
+    Website:
+    Documentation:
 
 AUTHORS
     Gabriele Venturi (https://github.com/gventuri)
@@ -43,16 +45,11 @@ CONTRIBUTORS
     Roberto Di Lillo (https://github.com/koop4)
 `;
 
-const MISSING_COMPONENT_MSG = `Missing component name. You need to provide one to create a new component`;
 const WRONG_PATH_MSG = `The path provided is wrong`;
 
-const help = () => { 
-  console.log(HELP_MSG);
-};
-
-const newComponent = (name, path) => {
-
-  path = path || 'src/components';
+class Commands {
+  add(name, path) {
+    path = path || DEFAULT_PATH;
 
     if (!fs.existsSync(path)) warnAndExit(WRONG_PATH_MSG);
 
@@ -64,7 +61,12 @@ const newComponent = (name, path) => {
 
     const templates = fs.readdirSync(__dirname + "/templates");
     for (let template of templates) createFile(template, name, path);
+  }
 }
+
+const help = () => {
+  console.log(HELP_MSG);
+};
 
 const createFile = async (file, name, path) => {
   const fileName = file.replace("$name", name);
@@ -93,22 +95,20 @@ const warnAndExit = error => {
 };
 
 const main = () => {
-  program
-    .arguments('<cmd> [name]');
-  
-  program
-    .command('help')
-    .action( () => help );
-    
-    program
-    .command('add [name]')
-    .option('-p, --path [path]')
-    .action( (name, opt) => {
-      newComponent(name, opt.path);
-    })
-  
-    program.parse(process.argv);
+  const commands = new Commands();
 
+  program.arguments("<cmd> [name]");
+
+  program.command("help").action(() => help);
+
+  program
+    .command("add [name]")
+    .option("-p, --path [path]")
+    .action((name, opt) => {
+      commands.add(name, opt.path);
+    });
+
+  program.parse(process.argv);
 };
 
 main();
