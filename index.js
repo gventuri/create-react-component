@@ -3,23 +3,56 @@
 /***
  * CREATE COMPONENT CLI
  * A CLI for creating new react components
- *
- * Author: Gabriele Venturi (https://github.com/gventuri)
- * Contributors: Gianni Valdanbrini (https://github.com/gvaldambrini)
- * License: MIT
  */
 
 const fs = require("fs");
-const program = require("commander");
+const program = require('commander');
 
-const DEFAULT_PATH = `src/components`;
+const HELP_MSG = `
+NAME
+    create-react-component-cli — react cli to create templated component
+
+DESCRIPTION
+    Create-react-component-cli allows to create react component easilt providing an interface 
+    implement your own template.
+
+SYNOPSIS
+    create-react-component-cli <command> [name] [options]
+
+AVAILABLE COMMAND:
+    add     creates a new component using the provided name. default path: 'src/components'
+
+OPTIONS
+    -path   override default path.
+
+COPYRIGHT
+    create-react-component-cli is available under the MIT license.
+    create-react-component-cli also includes external libraries that are available under MIT license.
+
+SEE ALSO
+    GitHub repository & Issue Tracker: https://github.com/gventuri/create-react-component
+    Npmjs: https://www.npmjs.com/package/create-react-component-cli
+    Website: 
+    Documentation: 
+
+AUTHORS
+    Gabriele Venturi (https://github.com/gventuri)
+
+CONTRIBUTORS
+    Gianni Vandalbrini (https://github.com/gvaldambrini)
+    Roberto Di Lillo (https://github.com/koop4)
+`;
 
 const MISSING_COMPONENT_MSG = `Missing component name. You need to provide one to create a new component`;
 const WRONG_PATH_MSG = `The path provided is wrong`;
 
-class Commands {
-  add(name, path) {
-    if (!name) warnAndExit(MISSING_COMPONENT_MSG);
+const help = () => { 
+  console.log(HELP_MSG);
+};
+
+const newComponent = (name, path) => {
+
+  path = path || 'src/components';
 
     if (!fs.existsSync(path)) warnAndExit(WRONG_PATH_MSG);
 
@@ -31,7 +64,6 @@ class Commands {
 
     const templates = fs.readdirSync(__dirname + "/templates");
     for (let template of templates) createFile(template, name, path);
-  }
 }
 
 const createFile = async (file, name, path) => {
@@ -61,21 +93,22 @@ const warnAndExit = error => {
 };
 
 const main = () => {
-  const commands = new Commands();
-
-  //Add
   program
-    .description(`Create a new react component\n----------------------------`)
-    .command(`add [url]", "creates a new component in ${DEFAULT_PATH}`)
-    .option(
-      "-p, --path [path]",
-      `The path where you want to create the compoenent (default: ${DEFAULT_PATH})`
-    )
-    .action(function(url) {
-      commands.add(url, this.path || DEFAULT_PATH);
-    });
+    .arguments('<cmd> [name]');
+  
+  program
+    .command('help')
+    .action( () => help );
+    
+    program
+    .command('add [name]')
+    .option('-p, --path [path]')
+    .action( (name, opt) => {
+      newComponent(name, opt.path);
+    })
+  
+    program.parse(process.argv);
 
-  program.parse(process.argv);
 };
 
 main();
