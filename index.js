@@ -3,31 +3,55 @@
 /***
  * CREATE COMPONENT CLI
  * A CLI for creating new react components
- *
- * Author: Gabriele Venturi (https://github.com/gventuri)
- * Contributors: Gianni Vandalbrini (https://github.com/gvaldambrini)
- * License: MIT
  */
 
 const fs = require("fs");
+const program = require('commander');
 
 const HELP_MSG = `
-CREATE REACT COMPONENT
-      create-component <MyComponent>                    creates a new component in src/components
-      create-component <MyComponent> --path=<my/dir>    creates a new component in my/dir
-END
+NAME
+    create-react-component-cli — react cli to create templated component
+
+DESCRIPTION
+    Create-react-component-cli allows to create react component easilt providing an interface 
+    implement your own template.
+
+SYNOPSIS
+    create-react-component-cli <command> [name] [options]
+
+AVAILABLE COMMAND:
+    add     creates a new component using the provided name. default path: 'src/components'
+
+OPTIONS
+    -path   override default path.
+
+COPYRIGHT
+    create-react-component-cli is available under the MIT license.
+    create-react-component-cli also includes external libraries that are available under MIT license.
+
+SEE ALSO
+    GitHub repository & Issue Tracker: https://github.com/gventuri/create-react-component
+    Npmjs: https://www.npmjs.com/package/create-react-component-cli
+    Website: 
+    Documentation: 
+
+AUTHORS
+    Gabriele Venturi (https://github.com/gventuri)
+
+CONTRIBUTORS
+    Gianni Vandalbrini (https://github.com/gvaldambrini)
+    Roberto Di Lillo (https://github.com/koop4)
 `;
+
 const MISSING_COMPONENT_MSG = `Missing component name. You need to provide one to create a new component`;
 const WRONG_PATH_MSG = `The path provided is wrong`;
 
-const help = () => {
+const help = () => { 
   console.log(HELP_MSG);
 };
 
-const newComponent = () => {
-  let [, , name, path = "src/components"] = process.argv;
-
-  if (path) path = path.replace("--path=", "");
+const newComponent = (name, path) => {
+  path = path || 'src/components'
 
   if (!name) warnAndExit(MISSING_COMPONENT_MSG);
 
@@ -70,11 +94,23 @@ const warnAndExit = error => {
 };
 
 const main = () => {
-  if (process.argv.find(el => el == "--help")) {
-    help();
-  } else {
-    newComponent();
-  }
+
+  program
+    .arguments('<cmd> [name]')
+    .option('--path')
+    .parse(process.argv);
+
+  program
+    .command('help')
+    .action( help )
+
+  program
+    .command('add [name]')
+    .action( () => {
+      const path = program.path.replace("--path=", "")
+      newComponent(name, path);
+    })
+
 };
 
 main();

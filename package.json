@@ -16,7 +16,6 @@
     "create-react-component": "./index.js"
   },
   "dependencies": {
-    "commander": "^2.19.0",
-    "inquirer": "^6.2.2"
+    "commander": "^2.19.0"
   }
 }
