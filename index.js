@@ -9,6 +9,9 @@ const fs = require("fs");
 const program = require("commander");
 
 const DEFAULT_PATH = "src/components";
+const DIR = fs.existsSync(".react-templates")
+  ? ".react-templates"
+  : __dirname + "/templates";
 
 const HELP_MSG = `
 NAME
@@ -44,8 +47,9 @@ CONTRIBUTORS
     Gianni Vandalbrini (https://github.com/gvaldambrini)
     Roberto Di Lillo (https://github.com/koop4)
 `;
-
 const WRONG_PATH_MSG = `The path provided is wrong`;
+const PROJ_INIT = `The project has been initialized`;
+const ALREADY_INIT = `The project has already been initialized`;
 
 class Commands {
   add(name, path) {
@@ -59,8 +63,32 @@ class Commands {
       warnAndExit(`Cannot create the directory "${path}/${name}".`);
     }
 
-    const templates = fs.readdirSync(__dirname + "/templates");
+    const templates = fs.readdirSync(DIR);
     for (let template of templates) createFile(template, name, path);
+  }
+
+  init() {
+    try {
+      if (DIR == ".react-templates") warnAndExit(ALREADY_INIT);
+
+      fs.mkdirSync(`.react-templates`, { recursive: true });
+
+      const files = fs.readdirSync(DIR);
+      for (let file of files) {
+        const data = fs.readFileSync(`${DIR}/${file}`, "utf-8");
+        fs.writeFile(`.react-templates/${file}`, data, err => {
+          if (err) {
+            console.log(`Cannot create "${file}"`);
+          } else {
+            console.log(`"${file}" created`);
+          }
+        });
+      }
+
+      console.log(PROJ_INIT);
+    } catch (err) {
+      warnAndExit(`Cannot create the directory ".react-templates".`);
+    }
   }
 }
 
@@ -77,7 +105,7 @@ const createFile = async (file, name, path) => {
   }
 
   const data = fs
-    .readFileSync(__dirname + `/templates/${file}`, "utf-8")
+    .readFileSync(`${DIR}/${file}`, "utf-8")
     .split(`$name`)
     .join(name);
   fs.writeFile(`${path}/${name}/${fileName}`, data, err => {
@@ -107,6 +135,10 @@ const main = () => {
     .action((name, opt) => {
       commands.add(name, opt.path);
     });
+
+  program.command("init").action(() => {
+    commands.init();
+  });
 
   program.parse(process.argv);
 };
