@@ -64,7 +64,6 @@ const newComponent = (name, path) => {
 
     const templates = fs.readdirSync(__dirname + "/templates");
     for (let template of templates) createFile(template, name, path);
-  }
 }
 
 const createFile = async (file, name, path) => {
