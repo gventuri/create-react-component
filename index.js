@@ -127,7 +127,7 @@ const main = () => {
 
   program.arguments("<cmd> [name]");
 
-  program.command("help").action(() => help);
+  program.command("help").action(() => help());
 
   program
     .command("add [name]")

@@ -35,3 +35,5 @@ Please, feel free to contribute to the project, in order to create something awe
 Gabriele Venturi (https://github.com/gventuri)
 
 Gianni Valdanbrini (https://github.com/gvaldambrini)
+
+Roberto Di Lillo (https://github.com/koop4)
