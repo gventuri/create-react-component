@@ -1,6 +1,6 @@
 {
   "name": "create-react-component-cli",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "A CLI for creating new react components",
   "main": "index.js",
   "scripts": {
