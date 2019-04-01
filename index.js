@@ -5,7 +5,7 @@
  * A CLI for creating new react components
  *
  * Author: Gabriele Venturi (https://github.com/gventuri)
- * Contributors: Gianni Vandalbrini (https://github.com/gvaldambrini)
+ * Contributors: Gianni Valdanbrini (https://github.com/gvaldambrini)
  * License: MIT
  */
 
