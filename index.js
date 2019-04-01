@@ -51,7 +51,8 @@ const help = () => {
 };
 
 const newComponent = (name, path) => {
-  path = path || 'src/components'
+
+  path = path || 'src/components';
 
   if (!name) warnAndExit(MISSING_COMPONENT_MSG);
 
@@ -101,21 +102,16 @@ const main = () => {
   program
     .command('help')
     .action( () => help );
-  //   .option('--path')
+    
+    program
+    .command('add [name]')
+    .option('-p, --path [path]')
+    .action( (name, opt) => {
+      newComponent(name, opt.path);
+    })
+  
     program.parse(process.argv);
 
-  // program
-  //   .command('help')
-  //   .action( help )
-
-  // program
-  //   .command('add [name]')
-  //   .action( () => {
-  //     const path = program.path.replace("--path=", "")
-  //     newComponent(name, path);
-  //   })
-
-    console.log('here')
 };
 
 main();
