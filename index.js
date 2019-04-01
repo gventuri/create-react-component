@@ -10,38 +10,29 @@
  */
 
 const fs = require("fs");
+const program = require("commander");
 
-const HELP_MSG = `
-CREATE REACT COMPONENT
-      create-component <MyComponent>                    creates a new component in src/components
-      create-component <MyComponent> --path=<my/dir>    creates a new component in my/dir
-END
-`;
+const DEFAULT_PATH = `src/components`;
+
 const MISSING_COMPONENT_MSG = `Missing component name. You need to provide one to create a new component`;
 const WRONG_PATH_MSG = `The path provided is wrong`;
 
-const help = () => {
-  console.log(HELP_MSG);
-};
+class Commands {
+  add(name, path) {
+    if (!name) warnAndExit(MISSING_COMPONENT_MSG);
 
-const newComponent = () => {
-  let [, , name, path = "src/components"] = process.argv;
+    if (!fs.existsSync(path)) warnAndExit(WRONG_PATH_MSG);
 
-  if (path) path = path.replace("--path=", "");
+    try {
+      fs.mkdirSync(`${path}/${name}/`, { recursive: true });
+    } catch (err) {
+      warnAndExit(`Cannot create the directory "${path}/${name}".`);
+    }
 
-  if (!name) warnAndExit(MISSING_COMPONENT_MSG);
-
-  if (!fs.existsSync(path)) warnAndExit(WRONG_PATH_MSG);
-
-  try {
-    fs.mkdirSync(`${path}/${name}/`, { recursive: true });
-  } catch (err) {
-    warnAndExit(`Cannot create the directory "${path}/${name}".`);
+    const templates = fs.readdirSync(__dirname + "/templates");
+    for (let template of templates) createFile(template, name, path);
   }
-
-  const templates = fs.readdirSync(__dirname + "/templates");
-  for (template of templates) createFile(template, name, path);
-};
+}
 
 const createFile = async (file, name, path) => {
   const fileName = file.replace("$name", name);
@@ -70,11 +61,21 @@ const warnAndExit = error => {
 };
 
 const main = () => {
-  if (process.argv.find(el => el == "--help")) {
-    help();
-  } else {
-    newComponent();
-  }
+  const commands = new Commands();
+
+  //Add
+  program
+    .description(`Create a new react component\n----------------------------`)
+    .command(`add [url]", "creates a new component in ${DEFAULT_PATH}`)
+    .option(
+      "-p, --path [path]",
+      `The path where you want to create the compoenent (default: ${DEFAULT_PATH})`
+    )
+    .action(function(url) {
+      commands.add(url, this.path || DEFAULT_PATH);
+    });
+
+  program.parse(process.argv);
 };
 
 main();
