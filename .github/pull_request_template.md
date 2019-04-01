@@ -6,7 +6,7 @@ What does this implement?  (removes unneeded)
 - New feature
 - Bug fix
 - Code refactor
-- ...
+- Update doc
 
 Related issue (if available)
 ------------------------------------------
