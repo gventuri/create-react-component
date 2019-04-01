@@ -54,19 +54,18 @@ const newComponent = (name, path) => {
 
   path = path || 'src/components';
 
-  if (!name) warnAndExit(MISSING_COMPONENT_MSG);
+    if (!fs.existsSync(path)) warnAndExit(WRONG_PATH_MSG);
 
-  if (!fs.existsSync(path)) warnAndExit(WRONG_PATH_MSG);
+    try {
+      fs.mkdirSync(`${path}/${name}/`, { recursive: true });
+    } catch (err) {
+      warnAndExit(`Cannot create the directory "${path}/${name}".`);
+    }
 
-  try {
-    fs.mkdirSync(`${path}/${name}/`, { recursive: true });
-  } catch (err) {
-    warnAndExit(`Cannot create the directory "${path}/${name}".`);
+    const templates = fs.readdirSync(__dirname + "/templates");
+    for (let template of templates) createFile(template, name, path);
   }
-
-  const templates = fs.readdirSync(__dirname + "/templates");
-  for (template of templates) createFile(template, name, path);
-};
+}
 
 const createFile = async (file, name, path) => {
   const fileName = file.replace("$name", name);
@@ -95,7 +94,6 @@ const warnAndExit = error => {
 };
 
 const main = () => {
-
   program
     .arguments('<cmd> [name]');
   
