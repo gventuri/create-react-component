@@ -96,21 +96,26 @@ const warnAndExit = error => {
 const main = () => {
 
   program
-    .arguments('<cmd> [name]')
-    .option('--path')
-    .parse(process.argv);
-
+    .arguments('<cmd> [name]');
+  
   program
     .command('help')
-    .action( help )
+    .action( () => help );
+  //   .option('--path')
+    program.parse(process.argv);
 
-  program
-    .command('add [name]')
-    .action( () => {
-      const path = program.path.replace("--path=", "")
-      newComponent(name, path);
-    })
+  // program
+  //   .command('help')
+  //   .action( help )
 
+  // program
+  //   .command('add [name]')
+  //   .action( () => {
+  //     const path = program.path.replace("--path=", "")
+  //     newComponent(name, path);
+  //   })
+
+    console.log('here')
 };
 
 main();
