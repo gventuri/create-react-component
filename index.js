@@ -7,8 +7,13 @@
 
 const fs = require("fs");
 const program = require("commander");
+const inquirer = require("inquirer");
 
-const DEFAULT_PATH = "src/components";
+let CONFIG = fs.existsSync(".react-templates/config.json")
+  ? JSON.parse(fs.readFileSync(".react-templates/config.json", "utf-8"))
+  : {};
+
+const DEFAULT_PATH = CONFIG.path || "src/components";
 const DIR = fs.existsSync(".react-templates")
   ? ".react-templates"
   : __dirname + "/templates";
@@ -18,13 +23,15 @@ NAME
     create-react-component-cli — react cli to create templated component
 
 DESCRIPTION
-    Create-react-component-cli allows to create react component easilt providing an interface 
+    Create-react-component-cli allows to create react component easilt providing an interface
     implement your own template.
 
 SYNOPSIS
-    create-react-component-cli <command> [name] [options]
+    create-react-component <command> [name] [options]
 
 AVAILABLE COMMAND:
+    init    initialize the cli
+    config  change the default settings of the cli. you need to initialize the cli before
     add     creates a new component using the provided name. default path: '${DEFAULT_PATH}'
 
 OPTIONS
@@ -52,19 +59,8 @@ const PROJ_INIT = `The project has been initialized`;
 const ALREADY_INIT = `The project has already been initialized`;
 
 class Commands {
-  add(name, path) {
-    path = path || DEFAULT_PATH;
-
-    if (!fs.existsSync(path)) warnAndExit(WRONG_PATH_MSG);
-
-    try {
-      fs.mkdirSync(`${path}/${name}/`, { recursive: true });
-    } catch (err) {
-      warnAndExit(`Cannot create the directory "${path}/${name}".`);
-    }
-
-    const templates = fs.readdirSync(DIR);
-    for (let template of templates) createFile(template, name, path);
+  help() {
+    console.log(HELP_MSG);
   }
 
   init() {
@@ -85,18 +81,66 @@ class Commands {
         });
       }
 
+      setTimeout(() => this.config(), 200);
+
       console.log(PROJ_INIT);
     } catch (err) {
       warnAndExit(`Cannot create the directory ".react-templates".`);
     }
   }
+
+  config() {
+    const questions = [
+      {
+        type: "input",
+        name: "path",
+        message:
+          "Please, provide the path where your components will be stored",
+        default: "src/components"
+      },
+      {
+        type: "confirm",
+        name: "storybook",
+        message: "Do you want to enable the support for Storybook?",
+        default: true
+      }
+    ];
+
+    inquirer.prompt(questions).then(function(answers) {
+      try {
+        fs.writeFileSync(
+          ".react-templates/config.json",
+          JSON.stringify(answers)
+        );
+      } catch (err) {
+        warnAndExit(`You need to initialize the cli before you configure it.`);
+      }
+    });
+  }
+
+  add(name, path) {
+    path = path || DEFAULT_PATH;
+
+    if (!fs.existsSync(path)) warnAndExit(WRONG_PATH_MSG);
+
+    try {
+      fs.mkdirSync(`${path}/${name}/`, { recursive: true });
+    } catch (err) {
+      warnAndExit(`Cannot create the directory "${path}/${name}".`);
+    }
+
+    const templates = fs
+      .readdirSync(DIR)
+      .filter(
+        file =>
+          file !== "config.json" &&
+          (CONFIG.storybook === true || file !== "$name.stories.js")
+      );
+    for (let template of templates) createFile(template, name, path);
+  }
 }
 
-const help = () => {
-  console.log(HELP_MSG);
-};
-
-const createFile = async (file, name, path) => {
+const createFile = (file, name, path) => {
   const fileName = file.replace("$name", name);
 
   if (fs.existsSync(`${path}/${name}/${fileName}`)) {
@@ -108,7 +152,8 @@ const createFile = async (file, name, path) => {
     .readFileSync(`${DIR}/${file}`, "utf-8")
     .split(`$name`)
     .join(name);
-  fs.writeFile(`${path}/${name}/${fileName}`, data, err => {
+
+  fs.writeFileSync(`${path}/${name}/${fileName}`, data, err => {
     if (err) {
       console.log(`Cannot create "${fileName}"`);
     } else {
@@ -127,7 +172,7 @@ const main = () => {
 
   program.arguments("<cmd> [name]");
 
-  program.command("help").action(() => help());
+  program.command("help").action(() => commands.help());
 
   program
     .command("add [name]")
@@ -138,6 +183,16 @@ const main = () => {
 
   program.command("init").action(() => {
     commands.init();
+  });
+
+  program.command("config").action(() => {
+    commands.config();
+  });
+
+  program.command("test").action(() => {
+    console.log(
+      JSON.parse(fs.readFileSync(".react-templates/config.json", "utf-8"))
+    );
   });
 
   program.parse(process.argv);
