@@ -33,6 +33,7 @@ AVAILABLE COMMAND:
     init    initialize the cli
     config  change the default settings of the cli. you need to initialize the cli before
     add     creates a new component using the provided name. default path: '${DEFAULT_PATH}'
+    travis  create a standard .travis.yml configuration file for your project
 
 OPTIONS
     -path   override default path.
@@ -53,6 +54,7 @@ AUTHORS
 CONTRIBUTORS
     Gianni Vandalbrini (https://github.com/gvaldambrini)
     Roberto Di Lillo (https://github.com/koop4)
+    Filippo Calabrese (https://github.com/filippocalabrese)
 `;
 const WRONG_PATH_MSG = `The path provided is wrong`;
 const PROJ_INIT = `The project has been initialized`;
@@ -89,6 +91,15 @@ class Commands {
     }
   }
 
+  static initTravis() {
+    const data = fs.readFileSync(__dirname+"/extra/.travis.yml", "utf-8");
+    fs.writeFile(__dirname+"/.travis.yml", data, err => {
+      if (err) {
+        console.log(`Cannot create travis init file`);
+      }
+    });
+  }
+
   config() {
     const questions = [
       {
@@ -103,6 +114,13 @@ class Commands {
         name: "storybook",
         message: "Do you want to enable the support for Storybook?",
         default: true
+      },
+      {
+        type: "confirm",
+        name: "travis",
+        message:
+          "Are you using Travis CI for your software development pipeline?",
+        default: true
       }
     ];
 
@@ -112,7 +130,11 @@ class Commands {
           ".react-templates/config.json",
           JSON.stringify(answers)
         );
+
+        handleTravis(answers.travis);
+
       } catch (err) {
+        console.log(err);
         warnAndExit(`You need to initialize the cli before you configure it.`);
       }
     });
@@ -167,6 +189,15 @@ const warnAndExit = error => {
   process.exit(-1);
 };
 
+const handleTravis = (flag) => {
+  if(flag){
+      Commands.initTravis();
+  }
+  else{
+      fs.unlink(".travis.yml", ()=>{console.log('removed travis configuration file');});
+  }
+}
+
 const main = () => {
   const commands = new Commands();
 
@@ -180,6 +211,10 @@ const main = () => {
     .action((name, opt) => {
       commands.add(name, opt.path);
     });
+
+  program.command("travis").action(() => {
+    Commands.initTravis();
+  });
 
   program.command("init").action(() => {
     commands.init();

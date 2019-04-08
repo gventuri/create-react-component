@@ -42,3 +42,5 @@ Gabriele Venturi (https://github.com/gventuri)
 Gianni Valdambrini (https://github.com/gvaldambrini)
 
 Roberto Di Lillo (https://github.com/koop4)
+
+Filippo Calabrese (https://github.com/filippocalabrese)
