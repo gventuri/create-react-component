@@ -4,7 +4,7 @@ Add new commands in the command line to create react components very fast and ea
 
 ## Setup
 
-To setup crete-react-component, you need to run `npm install -g create-react-component-cli`.
+To setup create-react-component, you need to run `npm install -g create-react-component-cli`.
 
 This command will install the CLI globally, so that you can run it in any react project from now on.
 
@@ -42,3 +42,5 @@ Gabriele Venturi (https://github.com/gventuri)
 Gianni Valdambrini (https://github.com/gvaldambrini)
 
 Roberto Di Lillo (https://github.com/koop4)
+
+Valentino Gagliardi (https://github.com/valentinogagliardi/)

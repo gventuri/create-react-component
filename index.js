@@ -51,8 +51,9 @@ AUTHORS
     Gabriele Venturi (https://github.com/gventuri)
 
 CONTRIBUTORS
-    Gianni Vandalbrini (https://github.com/gvaldambrini)
+    Gianni Valdambrini (https://github.com/gvaldambrini)
     Roberto Di Lillo (https://github.com/koop4)
+    Valentino Gagliardi (https://github.com/valentinogagliardi/)
 `;
 const WRONG_PATH_MSG = `The path provided is wrong`;
 const PROJ_INIT = `The project has been initialized`;
