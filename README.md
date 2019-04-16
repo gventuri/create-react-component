@@ -44,3 +44,5 @@ Gianni Valdambrini (https://github.com/gvaldambrini)
 Roberto Di Lillo (https://github.com/koop4)
 
 Valentino Gagliardi (https://github.com/valentinogagliardi/)
+
+Giuseppe Chiarella (https://github.com/Ogek/)
