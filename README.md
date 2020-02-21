@@ -34,6 +34,10 @@ Use `$name` inside the file or inside the file name. Each `$name` will be replac
 
 Please, feel free to contribute to the project, in order to create something awesome!
 
+Here are some things to be done:
+-Convert to typescript
+-Add linting
+
 ### Contributors
 
 Gabriele Venturi (https://github.com/gventuri)
