@@ -30,6 +30,34 @@ You will be able to customize the file by editing it directly (`.react-templates
 You can manage the templates by adding/removing or editing the files inside the `.react-templates` folder.
 Use `$name` inside the file or inside the file name. Each `$name` will be replaced with the actual name of the component provided when you run the command.
 
+#### Advanced settings
+
+You can use advanced settings for each file. For example, you can change the case type used in the file name.
+To do that, you should add a comment at the beginning of the file you want to edit, like in the example:
+
+```
+/**
+ * @caseType kebabCase
+ */
+```
+
+In the previous example, the file will be saved in `kebabCase`. You can choose from one of the following: `kababCase`, `snakeCase`, `CamelCase`. By default, if you don't provide any value, it will be used `PascalCase`.
+
+At this point, as your file name has been changed, you might need to change the name used in the dependencies. In order to do that, you need to edit slightly the file where you are including the dependency.
+For example, if you want to include a css file in your project and you want that file to be saved with kebab case, you need to edit your file from
+
+```
+import styles from './$name.module.scss';
+```
+
+to
+
+```
+import styles from './$(name, {"caseType": "kebabCase"}).module.scss';
+```
+
+As you can see in the example about, you are passing a JSON object as second paramether of a function. In the JSON object, you provide the `caseType` to `kebabCase`.
+
 ## Contribution
 
 Please, feel free to contribute to the project, in order to create something awesome!
@@ -37,6 +65,7 @@ Please, feel free to contribute to the project, in order to create something awe
 Here are some things to be done:
 -Convert to typescript
 -Add linting
+-Add tests
 
 ### Contributors
 

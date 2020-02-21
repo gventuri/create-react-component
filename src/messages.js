@@ -1,7 +1,6 @@
 const DEFAULT_PATH = require("./config").DEFAULT_PATH;
 
 const HELP_MSG = `
-(test)
 NAME
     create-react-component-cli — react cli to create templated component
 

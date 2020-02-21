@@ -1,6 +1,8 @@
 const fs = require("fs");
 const inquirer = require("inquirer");
 const messages = require("./messages");
+const parser = require("comment-parser");
+const _ = require("lodash");
 
 const CONFIG = require("./config").CONFIG;
 const DEFAULT_PATH = require("./config").DEFAULT_PATH;
@@ -103,19 +105,40 @@ class Commands {
  * CREATE FILE
  */
 const createFile = (file, name, path) => {
-  const fileName = file.replace("$name", name);
+  let fileName = file.replace("$name", name);
 
   if (fs.existsSync(`${path}/${name}/${fileName}`)) {
     console.log(`File "${fileName}" already exists, skipping.`);
     return;
   }
 
-  const data = fs
-    .readFileSync(`${DIR}/${file}`, "utf-8")
-    .split(`$name`)
-    .join(name);
+  const data = fs.readFileSync(`${DIR}/${file}`, "utf-8");
 
-  fs.writeFileSync(`${path}/${name}/${fileName}`, data, err => {
+  const parsed = parser(data);
+  const tags = _.get(parsed, "0.tags", []);
+  tags.map(({ tag, name }) => {
+    if (tag === "caseType") {
+      const splittedFilename = fileName.split(".");
+      fileName = `${_[name](
+        splittedFilename.slice(0, splittedFilename.length - 1).join(".")
+      )}.${splittedFilename.slice(splittedFilename.length - 1)[0]}`;
+    }
+  });
+
+  const regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
+  const finalData = data.replace(regex, function(match, _p1, _p2, p3) {
+    let newName = name;
+
+    if (p3) {
+      _.map(JSON.parse(p3), (value, key) => {
+        if (key === "caseType") newName = _[value](newName);
+      });
+    }
+
+    return newName;
+  });
+
+  fs.writeFileSync(`${path}/${name}/${fileName}`, finalData, err => {
     if (err) {
       console.log(`Cannot create "${fileName}"`);
     } else {
