@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
-    "inquirer": "^6.2.2"
+    "comment-parser": "^0.7.2",
+    "inquirer": "^6.2.2",
+    "lodash": "^4.17.15"
   }
 }

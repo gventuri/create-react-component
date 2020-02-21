@@ -1,4 +1,4 @@
 node_modules/
-src/
 .react-templates
+src/components
 .DS_Store
