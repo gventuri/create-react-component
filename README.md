@@ -12,7 +12,6 @@ This command will install the CLI globally, so that you can run it in any react 
 
 To create a new react component, you need to run `create-react-component add <ComponentName>`, or `crc add <ComponentName>`.
 This will create a new component and its default dependencies in the default directory (src/components).
-Please. note that the default filesystem structure follows the [redux ducks proposal](https://github.com/erikras/ducks-modular-redux).
 
 In case you don't want to use the default directory, you can pass a custom path as a parameter (i.e. `crc add <ComponentName> --path=my/custom/dir`) This will create the element in the provided directory.
 
