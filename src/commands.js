@@ -8,10 +8,16 @@ const DIR = require("./config").DIR;
 const DEFAULT_DIR = require("./config").DEFAULT_DIR;
 
 class Commands {
+  /**
+   * HELP
+   */
   help() {
     console.log(messages.HELP_MSG);
   }
 
+  /**
+   * INIT
+   */
   init() {
     try {
       if (DIR === DEFAULT_DIR) warnAndExit(messages.ALREADY_INIT);
@@ -39,6 +45,9 @@ class Commands {
     }
   }
 
+  /**
+   * CONFIG
+   */
   config() {
     const questions = [
       {
@@ -65,6 +74,9 @@ class Commands {
     });
   }
 
+  /**
+   * ADD
+   */
   add(name, path) {
     path = path || DEFAULT_PATH;
 
@@ -87,6 +99,9 @@ class Commands {
   }
 }
 
+/**
+ * CREATE FILE
+ */
 const createFile = (file, name, path) => {
   const fileName = file.replace("$name", name);
 
@@ -109,6 +124,9 @@ const createFile = (file, name, path) => {
   });
 };
 
+/**
+ * WARN AND EXIT
+ */
 const warnAndExit = error => {
   console.warn(error);
   process.exit(-1);
