@@ -1,20 +1,20 @@
 {
-  "name": "create-react-component-cli",
+  "name": "react-workflow-cli",
   "version": "1.4.0",
   "description": "A CLI for creating new react components",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Gabriele Venturi",
+  "author": "Justin Wallace / Gabriele Venturi",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/gventuri/create-react-component.git"
   },
   "bin": {
-    "create-react-component": "./index.js",
-    "crc": "./index.js"
+    "react-workflow": "./index.js",
+    "rwf": "./index.js"
   },
   "dependencies": {
     "commander": "^2.19.0",
