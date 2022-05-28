@@ -1,5 +1,3 @@
-(Thanks for sending a pull request! Please make sure you click the link above to view the contribution guidelines, then fill out the blanks below.)
-
 What does this implement?  (removes unneeded)
 ---------------------------------------------------
 
@@ -15,7 +13,7 @@ Related issue (if available)
 
 Any relevant logs, error output, etc?
 -------------------------------------
-(If it’s long, please paste to https://ghostbin.com/ and insert the link here.)
+(If it’s long, please add to a google doc and insert the link here.)
 
 
 Any other comments?

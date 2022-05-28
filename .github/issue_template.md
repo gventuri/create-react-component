@@ -16,7 +16,7 @@ What were you expecting to happen?
 
 Any logs, error output, etc?
 ----------------------------
-(If it’s long, please paste to https://ghostbin.com/ and insert the link here.)
+(If it’s long, please add to a google doc and insert the link here.)
 
 
 Any other comments?
